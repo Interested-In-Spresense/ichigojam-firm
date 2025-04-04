@@ -35,64 +35,64 @@ extern int bootflg;
 STATIC void put_chr(char c);
 STATIC void put_str(const char* s);
 
-INLINE int stopExecute();
+S_INLINE int stopExecute();
 
 static int basic_execute(char* commandline);
-INLINE void basic_init();
-INLINE int basic_listSize();
+S_INLINE void basic_init();
+S_INLINE int basic_listSize();
 
 static int IJB_save(int n, uint8* list, int size); // 0:ok
 static int IJB_load(int n, uint8* list, int sizelimit, int init); // ret:size if:-1 _g.err
 static int i2c0_init(); /* Initialize I2C module  0:ok 1:_g.err */
-INLINE int IJB_file();
+S_INLINE int IJB_file();
 
 static int IJB_wait(int n, int active);
-//INLINE int IJB_waitLittle(int n);
-INLINE void IJB_led(int on);
-/* INLINE */ int IJB_random(int n);
-INLINE void IJB_random_seed(int n);
+//S_INLINE int IJB_waitLittle(int n);
+S_INLINE void IJB_led(int on);
+/* S_INLINE */ int IJB_random(int n);
+S_INLINE void IJB_random_seed(int n);
 //void IJB_motor(int ch, int n);
-/*INLINE*/ int IJB_in();
-INLINE int IJB_ana(int n);
-/*INLINE*/ void IJB_out(int port, int st);
-/*INLINE*/ void IJB_pwm(int port, int plen, int len);
-/*INLINE*/ int IJB_btn(int n); // -4byte
-INLINE void IJB_clo();
+/*S_INLINE*/ int IJB_in();
+S_INLINE int IJB_ana(int n);
+/*S_INLINE*/ void IJB_out(int port, int st);
+/*S_INLINE*/ void IJB_pwm(int port, int plen, int len);
+/*S_INLINE*/ int IJB_btn(int n); // -4byte
+S_INLINE void IJB_clo();
 static void IJB_sleep();
-INLINE void IJB_reset();
+S_INLINE void IJB_reset();
 static void IJB_input(char** line);
-INLINE void IJB_uart(int16 txd, int16 rxd);
-INLINE void IJB_bps(int uart, int i2c);
-INLINE int IJB_i2c(uint8 writemode, uint16* param); // -1:ad error 1:ok 0:i2c error
+S_INLINE void IJB_uart(int16 txd, int16 rxd);
+S_INLINE void IJB_bps(int uart, int i2c);
+S_INLINE int IJB_i2c(uint8 writemode, uint16* param); // -1:ad error 1:ok 0:i2c error
 
-INLINE int IJB_peek(int ad);
-INLINE void IJB_poke(int ad, int n);
-INLINE int IJB_usr(int ad, int n);
-INLINE void IJB_lcd(uint mode); // 1.2b32
+S_INLINE int IJB_peek(int ad);
+S_INLINE void IJB_poke(int ad, int n);
+S_INLINE int IJB_usr(int ad, int n);
+S_INLINE void IJB_lcd(uint mode); // 1.2b32
 #ifndef NO_KBD_COMMAND
-INLINE void IJB_kbd(uint mode); // 1.5b1
+S_INLINE void IJB_kbd(uint mode); // 1.5b1
 #ifdef VERSION15
-INLINE void IJB_dac(int port, int val); // 1.5
+S_INLINE void IJB_dac(int port, int val); // 1.5
 #endif
 #endif
 
 // keyboard
 int key_getKey(); // from keybuffer, ret 0 if nul -> ret -1 if null 1.2b19
 static void key_clearKey();
-static inline uint key_getKeyboardID();
+S_INLINE uint key_getKeyboardID();
 
 // psg
-INLINE void psg_playMML(char* mml);
-INLINE void psg_beep(int tone, int len);
-INLINE void psg_tempo(int tempo);
-INLINE int psg_sound();
+S_INLINE void psg_playMML(char* mml);
+S_INLINE void psg_beep(int tone, int len);
+S_INLINE void psg_tempo(int tempo);
+S_INLINE int psg_sound();
 
 // screen
 static void screen_clear();
 static void video_on();
 static void video_off(int clkdiv);
 static short video_tick(int n);
-INLINE void video_clt();
+S_INLINE void video_clt();
 static void screen_clp();
 static uint8 screen_get(int x, int y);
 static uint8 screen_getCurrent();
@@ -115,14 +115,14 @@ static void iot_out2(int ad, int len, int flash);
 
 #endif
 
-static inline void ws_out(int port, int nled, int reapeat);
+S_INLINE void ws_out(int port, int nled, int reapeat);
 
 // util -----------------------------------------------------
 
 //#define clearMemory(p, len) memset(p, 0, len)
 
 
-INLINE uint8 basic_toupper(uint8 c) {
+S_INLINE uint8 basic_toupper(uint8 c) {
 	if (c >= 'a' && c <= 'z') {
 		return c & 0b1011111; // 速度一緒 なぜか小文字のほうが速い
 //		return c + ('A' - 'a');
@@ -186,12 +186,12 @@ static void put_strmem(int n, int m) {
 }
 
 
-extern /*inline*/ int sin360(int deg); // +168byte, APIから使えるようにして +4byte
+extern /*INLINE*/ int sin360(int deg); // +168byte, APIから使えるようにして +4byte
 /*
 // -- sin/cos/tan from @yrm
 int32 sin32(int32 s);
-INLINE int32 cos32(int32 s);
-//INLINE int32 tan32(int32 s);
+S_INLINE int32 cos32(int32 s);
+//S_INLINE int32 tan32(int32 s);
 int atan2(int y, int x);
 */
 
@@ -255,13 +255,13 @@ if (tokenid == STRING || tokenid == REM) {
 }
 */
 
-INLINE int16 list_getNumber(uint16 index) {
+S_INLINE int16 list_getNumber(uint16 index) {
 	return *(int16*)(list + index);
 }
-INLINE uint8 list_getLength(uint16 index) {
+S_INLINE uint8 list_getLength(uint16 index) {
 	return *(uint8*)(list + index + 2);
 }
-INLINE void list_setNumber(uint16 index, int16 num) {
+S_INLINE void list_setNumber(uint16 index, int16 num) {
 	*(int16*)(list + index) = num;
 }
 void list_setLength(uint16 index, uint8 num) {
@@ -283,7 +283,7 @@ static int16 list_findGoto(int16 number) {
 		index = -1;
 	return index;
 }
-static inline void list_setPC(int n) {
+S_INLINE void list_setPC(int n) {
 	pc = list + n + 3;
 	/*
 	pcnext = pc + *(pc - 1) + 4;
@@ -335,79 +335,87 @@ static void command_error(int erridx); // no return -> HardFault
 static void command_rem();
 static void command_let(char token);
 static int command_let2(int var);
-INLINE void command_edit(int number);
-INLINE void command_clv();
-static void command_if(); // INLINE化すると 4byte増
-static void command_for(); // INLINEで26byte増
+S_INLINE void command_edit(int number);
+S_INLINE void command_clv();
+static void command_if(); // S_INLINE化すると 4byte増
+static void command_for(); // S_INLINEで26byte増
 static void command_next();
-INLINE void command_goto();
-INLINE void command_gosub();
-INLINE void command_return();
-INLINE void command_cont();
-static void command_print(); // 元はINLINEではなかった
-INLINE void command_input();
-INLINE void command_new();
-INLINE void command_list();
-INLINE void command_run();
-INLINE void command_end();
+S_INLINE void command_goto();
+S_INLINE void command_gosub();
+S_INLINE void command_return();
+S_INLINE void command_cont();
+static void command_print(); // 元はS_INLINEではなかった
+S_INLINE void command_input();
+S_INLINE void command_new();
+S_INLINE void command_list();
+S_INLINE void command_run();
+S_INLINE void command_end();
 static void command_load(int mode);
-INLINE void command_save();
-INLINE void command_files();
-INLINE void command_led();
-INLINE void command_out();
-INLINE void command_pwm();
-INLINE void command_clo();
-INLINE void command_wait();
-//INLINE void command_lwait(); // ver 1.2
-INLINE void command_cls();
-INLINE void command_locate();
-//INLINE void command_motor();
-static void command_renum(); // INLINEで4byte増える
-INLINE void command_sleep(); // INLINEで8byte増
-INLINE void command_reset(); // INLINEで増
-INLINE void command_bps();
-INLINE void command_clt();
-INLINE void command_play();
-INLINE void command_beep(); // INLINEで4増
-INLINE void command_tempo();
-INLINE void command_video();
-INLINE void command_scroll();
-INLINE void command_clp();
-INLINE void command_poke();
-INLINE void command_copy();
-INLINE void command_clk();
-INLINE void command_help();
-INLINE void command_uart();
-INLINE void command_srnd();
-INLINE void command_draw();
-INLINE void command_at();
-INLINE void command_ok();
+S_INLINE void command_save();
+S_INLINE void command_files();
+S_INLINE void command_led();
+S_INLINE void command_out();
+S_INLINE void command_pwm();
+S_INLINE void command_clo();
+S_INLINE void command_wait();
+//S_INLINE void command_lwait(); // ver 1.2
+S_INLINE void command_cls();
+S_INLINE void command_locate();
+//S_INLINE void command_motor();
+static void command_renum(); // S_INLINEで4byte増える
+S_INLINE void command_sleep(); // S_INLINEで8byte増
+S_INLINE void command_reset(); // S_INLINEで増
+S_INLINE void command_bps();
+S_INLINE void command_clt();
+S_INLINE void command_play();
+S_INLINE void command_beep(); // S_INLINEで4増
+S_INLINE void command_tempo();
+S_INLINE void command_video();
+S_INLINE void command_scroll();
+S_INLINE void command_clp();
+S_INLINE void command_poke();
+S_INLINE void command_copy();
+S_INLINE void command_clk();
+S_INLINE void command_help();
+S_INLINE void command_uart();
+S_INLINE void command_srnd();
+S_INLINE void command_draw();
+S_INLINE void command_at();
+S_INLINE void command_ok();
 
-INLINE void command_lcd();
+S_INLINE void command_lcd();
 //#ifndef NO_KBD_COMMAND
 #ifdef VERSION15
-INLINE void command_kbd();
-INLINE void command_dac();
+S_INLINE void command_kbd();
+S_INLINE void command_dac();
 #endif
 #ifdef EXT_SENSEHAT
-INLINE void command_sh_mlsp();
+S_INLINE void command_sh_mlsp();
 #endif
 
 #ifdef EXT_IOT
-INLINE void command_iot_out();
+S_INLINE void command_iot_out();
 #endif
-INLINE void command_ws_out(int port);
+S_INLINE void command_ws_out(int port);
 
 
 // token -----------------------------------------------------------------
 
 static uint8 token_getChar();
-//INLINE uint8 token_getCharWithSpace(); // 1.1b12 - 1.2b52廃止
+//S_INLINE uint8 token_getCharWithSpace(); // 1.1b12 - 1.2b52廃止
+#ifdef USE_VOID_TOKEN_GET
+static void token_get(Token *);
+#define Token_get(x) token_get(&(x))
+S_INLINE int token_getCode() { Token t; Token_get(t); return t.code; }
+#else
 static Token token_get();
-static void token_back(); // INLINE -> size up
+#define Token_get(x) { (x) = token_get(); }
+#define token_getCode(x) token_get().code
+#endif
+static void token_back(); // S_INLINE -> size up
 static int16 token_getArrayIndex();
 static void token_end();
-INLINE void token_puts();
+S_INLINE void token_puts();
 static char* token_skipstr();
 static int16 token_expression();
 static int16 token_expression1();
@@ -427,7 +435,7 @@ static int16 token_expression5();
 static void basic_clearVars() {
 	memclear((uint8*)var, (IJB_SIZEOF_ARRAY + IJB_SIZEOF_VAR) * 2);
 }
-INLINE void basic_init() {
+S_INLINE void basic_init() {
 	basic_clearVars();
 	memclear4((uint8*)list, IJB_SIZEOF_LIST);
 	pc = pcbreak = NULL;
@@ -436,7 +444,7 @@ INLINE void basic_init() {
 	extension_init();
 	#endif
 }
-INLINE int basic_listSize() {
+S_INLINE int basic_listSize() {
 	return _g.listsize;
 }
 
@@ -489,7 +497,7 @@ int basic_execute(char* commandline) {
 			break;
 		}
 
-		Token token = token_get();
+		Token token; Token_get(token);
 		/*
 		put_chr('*');
 		put_num(token.code);
@@ -625,7 +633,7 @@ int basic_execute(char* commandline) {
 	return BASIC_RESULT_EXECUTE;
 }
 
-INLINE void command_edit(int number) {
+S_INLINE void command_edit(int number) {
 	if (number <= 0 || (pc >= list && pc < list + IJB_SIZEOF_LIST)) { // プログラム実行時は不可
 		command_error(ERR_SYNTAX_ERROR);
 		return;
@@ -753,7 +761,7 @@ static uint8 token_getChar() {
 	}
 }
 /* // 1.1b12 で導入、1.2b52 で廃止
-INLINE uint8 token_getCharWithSpace() { // 60byte増
+S_INLINE uint8 token_getCharWithSpace() { // 60byte増
 	uint8 c = *pc;
 	if (c == ':') // || c == '\'')
 		return 0;
@@ -762,27 +770,48 @@ INLINE uint8 token_getCharWithSpace() { // 60byte増
 */
 //#include <stdio.h>
 
-static Token token_get() {
+#ifdef USE_VOID_TOKEN_GET
+#define Token_code token->code
+#define Token_value token->value
+#define Token_object(x) (*(x))
+#define Token_return(x) return
+static void token_get(Token *token)
+#else
+#define Token_code token.code
+#define Token_value token.value
+#define Token_object(x) (x)
+#define Token_return(x) return (x)
+static Token token_get()
+#endif
+{
 #ifdef TOKEN_CACHE
 	if (pc == lasttoken && lasttokenpc) {
 		pc = lasttokenpc;
 //	printf("%d %d %d %d hit\n", (int)pc, (int)lasttoken, (int)lasttokenpc, bklasttoken.code);
-		return bklasttoken;
+#ifdef USE_VOID_TOKEN_GET
+		*token = bklasttoken;
+#endif
+		Token_return(bklasttoken);
 	}
 //	printf("%d %d %d\n", (int)pc, (int)lasttoken, (int)lasttokenpc);
 #endif
 	
+#ifdef USE_VOID_TOKEN_GET
+	token->code = 0;
+	token->value = 0;
+#else
 	Token token = { 0, 0 };
+#endif
 	uint8 c = token_getChar();
 
 	lasttoken = pc;
 	if (c == '\0') {
-		token.code = TOKEN_NULL;
+		Token_code = TOKEN_NULL;
 	} else if (c >= '0' && c <= '9') { // number
-		token.code = TOKEN_NUMBER;
-//		token.value = 0;
+		Token_code = TOKEN_NUMBER;
+//		Token_value = 0;
 		for (;;) {
-			token.value = token.value * 10 + (c - '0');
+			Token_value = Token_value * 10 + (c - '0');
 			pc++;
 			c = token_getChar();
 			if (c < '0' || c > '9')
@@ -792,16 +821,16 @@ static Token token_get() {
 		pc++;
 		c = token_getChar();
 		if (!((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F'))) {
-			token.code = TOKEN_ERROR;
+			Token_code = TOKEN_ERROR;
 		} else {
-			token.code = TOKEN_NUMBER;
+			Token_code = TOKEN_NUMBER;
 			int value = 0;
 			for (;;) {
 				if (c <= '9')
 					c -= '0';
 				else
 					c -= 'A' - 10;
-//				token.value = (token.value << 4) + c;
+//				Token_value = (Token_value << 4) + c;
 				value = (value << 4) + c;
 				pc++;
 				c = token_getChar(); // 1.1b12 -> 空白で切ることに -> 1.2b52 戻す
@@ -814,18 +843,18 @@ static Token token_get() {
 				if (!((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F')))
 					break;
 			}
-			token.value = value;
+			Token_value = value;
 		}
 	} else if (c == '`') { // bin number
 		pc++;
 		c = token_getChar();
 		if (c != '0' && c != '1') {
-			token.code = TOKEN_ERROR;
+			Token_code = TOKEN_ERROR;
 		} else {
-			token.code = TOKEN_NUMBER;
-//			token.value = 0;
+			Token_code = TOKEN_NUMBER;
+//			Token_value = 0;
 			for (;;) {
-				token.value = (token.value << 1) + (c - '0');
+				Token_value = (Token_value << 1) + (c - '0');
 				pc++;
 				c = token_getChar();
 				if (c != '0' && c != '1') {
@@ -865,8 +894,8 @@ static Token token_get() {
 //				pc++;
 			}
 			if (hit) {
-				token.code = i + N_TOKEN_OFFSET;
-//				return token;
+				Token_code = i + N_TOKEN_OFFSET;
+//				Token_return(token);
 				goto RET;
 			}
 			ptoken += len;
@@ -878,27 +907,27 @@ static Token token_get() {
 		#ifdef USE_EXTENSION
 		int n = extension_parse();
 		if (n) {
-			token.code = n;
+			Token_code = n;
 			goto RET;
 		}
 		#endif
 
 		if (c >= 'A' && c <= 'Z') {
 			pc++;
-			token.code = TOKEN_VAR;
-			token.value = c - ('A' - IJB_SIZEOF_ARRAY);
+			Token_code = TOKEN_VAR;
+			Token_value = c - ('A' - IJB_SIZEOF_ARRAY);
 		} else {
 			pc++; // 1.4b10
-			token.code = TOKEN_ERROR;
+			Token_code = TOKEN_ERROR;
 		}
 	}
 RET:
 #ifdef TOKEN_CACHE
-	bklasttoken = token;
+	bklasttoken = Token_object(token);
 //	printf("%c %d %d push\n", *lasttoken, (int)pc, bklasttoken.code);
 	lasttokenpc = pc;
 #endif
-	return token;
+	Token_return(token);
 }
 static void token_back() {
 	pc = lasttoken;
@@ -907,7 +936,7 @@ static int16 token_getArrayIndex() {
 	int16 v = token_expression();
 	IJB_ERR_CHK1(0);
 
-	Token t = token_get();
+	Token t; Token_get(t);
 	if (t.code != TOKEN_ARRAY_E) {
 		command_error(ERR_SYNTAX_ERROR);
 		return 0; // IJB_ERR_RETURN1(0);
@@ -919,7 +948,7 @@ static int16 token_getArrayIndex() {
 	return v;
 }
 static void token_end() {
-	int code = token_get().code; // 容量削減? 1.2b62
+	int code = token_getCode(); // 容量削減? 1.2b62
 	token_back();
 	if (code != TOKEN_NULL && code != TOKEN_ELSE) {
 		command_error(ERR_SYNTAX_ERROR);
@@ -952,7 +981,7 @@ static void token_end() {
 	}
 	*/
 }
-INLINE void token_puts() {
+S_INLINE void token_puts() {
 //	if (*pc == '"') // 1.2beta9
 //		pc++;
 	while (*pc && *pc != '"') {
@@ -989,7 +1018,7 @@ int16 token_expression() {
 				if (_g.err)
 					return value;
 				for (;;) {
-					Token t = token_get();
+					Token t; Token_get(t);
 					if (t.code != TOKEN_LOR) {
 						token_back();
 						break;
@@ -1007,7 +1036,7 @@ int16 token_expression0() {
 	if (_g.err)
 		return value;
 	for (;;) {
-		Token t = token_get();
+		Token t; Token_get(t);
 		if (t.code != TOKEN_LAND) {
 			token_back();
 			break;
@@ -1029,7 +1058,7 @@ static int16 token_expression() {
 	int16 value = token_expression1();
 	if (!_g.err) {
 		for (;;) {
-			Token t = token_get();
+			Token t; Token_get(t);
 			if (t.code != TOKEN_LOR_1 && t.code != TOKEN_LOR_2) {
 				token_back();
 				break;
@@ -1049,7 +1078,7 @@ static int16 token_expression1() {
 	int16 value = token_expression2();
 	IJB_ERR_CHK1(value);
 	for (;;) {
-		Token t = token_get();
+		Token t; Token_get(t);
 		if (t.code != TOKEN_LAND_1 && t.code != TOKEN_LAND_2) {
 			token_back();
 			break;
@@ -1064,7 +1093,7 @@ static int16 token_expression2() {
 	int16 value = token_expression3();
 	IJB_ERR_CHK1(value);
 	for (;;) {
-		Token t = token_get();
+		Token t; Token_get(t);
 		if (t.code < TOKEN_EQEQ || t.code > TOKEN_GT) {
 			token_back();
 			break;
@@ -1089,7 +1118,7 @@ static int16 token_expression3() {
 	int16 value = token_expression4();
 	IJB_ERR_CHK1(value);
 	for (;;) {
-		Token t = token_get();
+		Token t; Token_get(t);
 		if (t.code < TOKEN_PLUS || t.code > TOKEN_OR) {
 			token_back();
 			break;
@@ -1117,7 +1146,7 @@ static int16 token_expression4() {
 	int16 value = token_expression5();
 	IJB_ERR_CHK1(value);
 	for (;;) {
-		Token t = token_get();
+		Token t; Token_get(t);
 		if (t.code < TOKEN_AND || t.code > TOKEN_MOD_2) {
 			token_back();
 			break;
@@ -1173,20 +1202,20 @@ static int16 token_expression4() {
 static int16 token_paren1() {
 	int16 v = token_expression();
 	IJB_ERR_CHK1(v);
-	Token t = token_get();
+	Token t; Token_get(t);
 	if (t.code != TOKEN_PAREN_E) {
 		command_error(ERR_SYNTAX_ERROR);
 	}
 	return v;
 }
 static int16 token_opt1() {
-	Token t = token_get();
+	Token t; Token_get(t);
 	int16 v = 0;
 	if (t.code != TOKEN_PAREN_E) {
 		token_back();
 		v = token_expression();
 		if (!_g.err) {
-			t = token_get();
+			Token_get(t);
 			if (t.code != TOKEN_PAREN_E) {
 				command_error(ERR_SYNTAX_ERROR);
 			}
@@ -1198,7 +1227,7 @@ static int16 token_opt1() {
 #define LIMIT_POS_CALCSTACK (ram + SIZE_RAM + 288 * 1) // 1段分確保
 
 static int16 token_expression5() {
-	Token t = token_get();
+	Token t; Token_get(t);
 	int n;
 //	printf("%d %d\n", t.code, TOKEN_IOT_IN); // , 32
 	switch (t.code) {
@@ -1218,7 +1247,7 @@ static int16 token_expression5() {
 		case TOKEN_PAREN_B: {
 			int16 v = token_expression();
 			IJB_ERR_CHKB();
-			t = token_get();
+			Token_get(t);
 			if (t.code != TOKEN_PAREN_E) {
 				command_error(ERR_SYNTAX_ERROR);
 				break;
@@ -1226,7 +1255,7 @@ static int16 token_expression5() {
 			return v;
 		}
 		case TOKEN_INKEY:
-			t = token_get();
+			Token_get(t);
 			if (t.code != TOKEN_PAREN_E) {
 				command_error(ERR_SYNTAX_ERROR);
 				break;
@@ -1265,7 +1294,7 @@ static int16 token_expression5() {
 			return _g.cursorx + _g.cursory * _g.screenw;
 		}
 		case TOKEN_SOUND:
-			t = token_get();
+			Token_get(t);
 			if (t.code != TOKEN_PAREN_E) {
 				command_error(ERR_SYNTAX_ERROR);
 				break;
@@ -1385,7 +1414,7 @@ static int16 token_expression5() {
 	//		}
 	//		return v;
 
-			t = token_get();
+			Token_get(t);
 			if (t.code != TOKEN_STRING) {
 				command_error(ERR_SYNTAX_ERROR);
 				break;
@@ -1393,7 +1422,7 @@ static int16 token_expression5() {
 			int16 v = (uint8)*token_skipstr();
 			if (_g.err)
 				break;
-			t = token_get();
+			Token_get(t);
 			if (t.code != TOKEN_PAREN_E) {
 				command_error(ERR_SYNTAX_ERROR);
 				break;
@@ -1413,21 +1442,21 @@ static int16 token_expression5() {
 		case TOKEN_SCR:
 		case TOKEN_POINT: { // 1.3.2b19
 			int type = t.code;
-			t = token_get();
+			Token_get(t);
 			if (t.code == TOKEN_PAREN_E) {
 				return screen_getCurrent();
 			}
 			token_back();
 			int16 v = token_expression();
 			IJB_ERR_CHK1(0);
-			t = token_get();
+			Token_get(t);
 			if (t.code != TOKEN_COMMA) {
 				command_error(ERR_SYNTAX_ERROR);
 				break;
 			}
 			int16 v2 = token_expression();
 			IJB_ERR_CHK1(0);
-			t = token_get();
+			Token_get(t);
 			if (t.code != TOKEN_PAREN_E) {
 				command_error(ERR_SYNTAX_ERROR);
 				break;
@@ -1441,11 +1470,11 @@ static int16 token_expression5() {
 			int16 v = token_expression();
 			int16 v2 = 0; // 1.3.2b22 省略可能に
 			IJB_ERR_CHK1(0);
-			t = token_get();
+			Token_get(t);
 			if (t.code == TOKEN_COMMA) {
 				v2 = token_expression();
 				IJB_ERR_CHK1(0);
-				t = token_get();
+				Token_get(t);
 			}
 			if (t.code != TOKEN_PAREN_E) {
 				command_error(ERR_SYNTAX_ERROR);
@@ -1458,7 +1487,7 @@ static int16 token_expression5() {
 			int16 v = token_expression();
 			if (_g.err)
 				return 0;
-			t = token_get();
+			Token_get(t);
 			if (t.code != TOKEN_COMMA) {
 				command_error(ERR_SYNTAX_ERROR);
 				break;
@@ -1466,7 +1495,7 @@ static int16 token_expression5() {
 			int16 v2 = token_expression();
 			if (_g.err)
 				return 0;
-			t = token_get();
+			Token_get(t);
 			if (t.code != TOKEN_PAREN_E) {
 				command_error(ERR_SYNTAX_ERROR);
 				break;
@@ -1491,7 +1520,7 @@ static int16 token_expression5() {
 				IJB_ERR_CHK1(0);
 				if (i == 4)
 					break;
-				t = token_get();
+				Token_get(t);
 				if (t.code != TOKEN_COMMA) {
 					if (i == 2) { // 1.2b42 i2c省略形対応
 						token_back();
@@ -1520,7 +1549,7 @@ static int16 token_expression5() {
 					return 0;
 				}
 			}
-			t = token_get();
+			Token_get(t);
 			if (t.code != TOKEN_PAREN_E) {
 				command_error(ERR_SYNTAX_ERROR);
 				break;
@@ -1595,7 +1624,7 @@ void command_rem() {
 		pc++;
 }
 void command_let(char token) {
-	Token t = token_get();
+	Token t; Token_get(t);
 	int16 v = 0;
 	switch (t.code) {
 		case TOKEN_VAR:
@@ -1605,7 +1634,7 @@ void command_let(char token) {
 			v = token_getArrayIndex();
 			IJB_ERR_CHK();
 			if (token == TOKEN_COMMA) {
-				t = token_get();
+				Token_get(t);
 				if (t.code != token) {
 					command_error(ERR_SYNTAX_ERROR);
 					return; // IJB_ERR_RETURN();
@@ -1613,7 +1642,7 @@ void command_let(char token) {
 				command_let2(v);
 				for (;;) {
 					IJB_ERR_CHK(); // 1.2b31
-					t = token_get();
+					Token_get(t);
 					if (t.code != token) {
 						token_back();
 						token_end();
@@ -1632,7 +1661,7 @@ void command_let(char token) {
 			command_error(ERR_SYNTAX_ERROR);
 			return; // IJB_ERR_RETURN();
 	}
-	t = token_get();
+	Token_get(t);
 	if (t.code != token) {
 		command_error(ERR_SYNTAX_ERROR);
 		return; // IJB_ERR_RETURN();
@@ -1658,12 +1687,12 @@ void command_if() {
 		b = !b;
 #endif
 	if (b) {
-		Token t = token_get();
+		Token t; Token_get(t);
 		if (t.code != TOKEN_THEN)
 			token_back();
 	} else {
 		for (;;) {
-			int code = token_get().code;
+			int code = token_getCode();
 			if (code == TOKEN_NULL) {
 				if (*pc == '\0')
 					break;
@@ -1692,7 +1721,7 @@ void command_for() {
 	forstack[_g.nforstack++] = pc;
 #endif
 
-	Token t = token_get();
+	Token t; Token_get(t);
 	int16 v = 0;
 	if (t.code == TOKEN_VAR) {
 		v = t.value;
@@ -1703,7 +1732,7 @@ void command_for() {
 		command_error(ERR_SYNTAX_ERROR);
 		return; // IJB_ERR_RETURN();
 	}
-	t = token_get();
+	Token_get(t);
 	if (t.code != TOKEN_EQ && t.code != TOKEN_COMMA) {
 		command_error(ERR_SYNTAX_ERROR);
 		return; // IJB_ERR_RETURN();
@@ -1711,7 +1740,7 @@ void command_for() {
 	int ival = command_let2(v);
 	IJB_ERR_CHK();
 
-	t = token_get();
+	Token_get(t);
 	if (t.code != TOKEN_TO) {
 		command_error(ERR_SYNTAX_ERROR);
 		return; // IJB_ERR_RETURN();
@@ -1720,7 +1749,7 @@ void command_for() {
 	IJB_ERR_CHK();
 
 	int step = 1;
-	t = token_get();
+	Token_get(t);
 	if (t.code != TOKEN_STEP) {
 		token_back();
 	} else {
@@ -1747,7 +1776,7 @@ void command_next() {
 	pc = forstack[_g.nforstack - 1];
 #endif
 
-	Token t = token_get();
+	Token t; Token_get(t);
 	int v = 0;
 	if (t.code == TOKEN_VAR) {
 		v = t.value;
@@ -1758,7 +1787,7 @@ void command_next() {
 		command_error(ERR_SYNTAX_ERROR);
 		return; // IJB_ERR_RETURN();
 	}
-	t = token_get();
+	Token_get(t);
 	if (t.code != TOKEN_EQ && t.code != TOKEN_COMMA) {
 		command_error(ERR_SYNTAX_ERROR);
 		return; // IJB_ERR_RETURN();
@@ -1766,7 +1795,7 @@ void command_next() {
 	int ival = token_expression(); // initval
 	IJB_ERR_CHK();
 
-	t = token_get();
+	Token_get(t);
 	if (t.code != TOKEN_TO) {
 		command_error(ERR_SYNTAX_ERROR);
 		return; // IJB_ERR_RETURN();
@@ -1775,7 +1804,7 @@ void command_next() {
 	IJB_ERR_CHK();
 
 	int step = 1;
-	t = token_get();
+	Token_get(t);
 	if (t.code != TOKEN_STEP) {
 		token_back();
 	} else {
@@ -1803,7 +1832,7 @@ void command_next() {
 	}
 	var[v] += step;
 }
-INLINE void command_goto() {
+S_INLINE void command_goto() {
 	int n = token_expression(); // 式だとrenumで都合が悪い
 	IJB_ERR_CHK();
 	n = list_findGoto(n);
@@ -1814,7 +1843,7 @@ INLINE void command_goto() {
 	token_end();
 	list_setPC(n);
 }
-INLINE void command_gosub() {
+S_INLINE void command_gosub() {
 	if (_g.ngosubstack >= IJB_SIZEOF_GOSUB_STACK) {
 //		command_error(ERR_TOO_MANY_NESTED_GOSUBS);
 		command_error(ERR_STACK_OVERFLOW);
@@ -1837,7 +1866,7 @@ INLINE void command_gosub() {
 
 	list_setPC(n);
 }
-INLINE void command_return() {
+S_INLINE void command_return() {
 	if (_g.ngosubstack == 0) {
 //		command_error(ERR_RETURN_WITHOUT_GOSUB);
 		command_error(ERR_NOT_MATCH);
@@ -1850,7 +1879,7 @@ INLINE void command_return() {
 	pc = gosubstack[--_g.ngosubstack];
 #endif
 }
-INLINE void command_cont() {
+S_INLINE void command_cont() {
 	token_end();
 	if (pc < list || pc >= list + 1026) {
 		pc = pcbreak;
@@ -1880,7 +1909,7 @@ INLINE void command_cont() {
 void command_print() {
 	int retflg = 1;
 	for (;;) {
-		Token t = token_get();
+		Token t; Token_get(t);
 		if (t.code == TOKEN_NULL || t.code == TOKEN_ELSE) {
 			token_back();
 			break;
@@ -1893,11 +1922,11 @@ void command_print() {
 				int16 n = token_expression();
 				IJB_ERR_CHK();
 				int16 m = -1;
-				t = token_get();
+				Token_get(t);
 				if (t.code == TOKEN_COMMA) {
 					m = token_expression();
 					IJB_ERR_CHK();
-					t = token_get();
+					Token_get(t);
 				}
 				if (t.code != TOKEN_PAREN_E) {
 					command_error(ERR_SYNTAX_ERROR);
@@ -1911,7 +1940,7 @@ void command_print() {
 					int16 n = token_expression();
 					IJB_ERR_CHK();
 					put_chr((char)(n & 0xff));
-					t = token_get();
+					Token_get(t);
 					if (t.code == TOKEN_COMMA) {
 						continue;
 					}
@@ -1926,11 +1955,11 @@ void command_print() {
 				int n2 = token_expression();
 				IJB_ERR_CHK();
 				int16 m = 0;
-				t = token_get();
+				Token_get(t);
 				if (t.code == TOKEN_COMMA) {
 					m = token_expression();
 					IJB_ERR_CHK();
-					t = token_get();
+					Token_get(t);
 				}
 				if (t.code != TOKEN_PAREN_E) {
 					command_error(ERR_SYNTAX_ERROR);
@@ -1967,11 +1996,11 @@ void command_print() {
 				uint16 n2 = token_expression() & 0xffff;
 				IJB_ERR_CHK();
 				int16 m = 0;
-				t = token_get();
+				Token_get(t);
 				if (t.code == TOKEN_COMMA) {
 					m = token_expression();
 					IJB_ERR_CHK();
-					t = token_get();
+					Token_get(t);
 				}
 				if (t.code != TOKEN_PAREN_E) {
 					command_error(ERR_SYNTAX_ERROR);
@@ -2000,11 +2029,11 @@ void command_print() {
 				uint16 n2 = token_expression() & 0xffff;
 				IJB_ERR_CHK();
 				int16 m = 0;
-				t = token_get();
+				Token_get(t);
 				if (t.code == TOKEN_COMMA) {
 					m = token_expression();
 					IJB_ERR_CHK();
-					t = token_get();
+					Token_get(t);
 				}
 				if (t.code != TOKEN_PAREN_E) {
 					command_error(ERR_SYNTAX_ERROR);
@@ -2035,7 +2064,7 @@ void command_print() {
 				break;
 		}
 		retflg = 1;
-		t = token_get();
+		Token_get(t);
 		if (t.code == TOKEN_NULL || t.code == TOKEN_ELSE) {
 			token_back();
 			break;
@@ -2073,7 +2102,7 @@ void command_print() {
 
 static int token_option1(int m) {
 	IJB_ERR_CHK1();
-	int code = token_get().code;
+	int code = token_getCode();
 	if (code != TOKEN_COMMA) {
 		token_back();
 	} else {
@@ -2098,16 +2127,16 @@ char* bkp_input;
 int16 v_input;
 #endif
 
-INLINE void command_input() { // 配列の場合2回評価される問題あり? -> 1.2b48で解消? INPUT[0]でエラーバグ修正
-	Token t = token_get();
+S_INLINE void command_input() { // 配列の場合2回評価される問題あり? -> 1.2b48で解消? INPUT[0]でエラーバグ修正
+	Token t; Token_get(t);
 	if (t.code == TOKEN_STRING) {
 		token_puts();
-		t = token_get();
+		Token_get(t);
 		if (t.code != TOKEN_COMMA) {
 			command_error(ERR_SYNTAX_ERROR);
 			return;
 		}
-		t = token_get();
+		Token_get(t);
 	} else {
 		put_chr('?');
 	}
@@ -2165,7 +2194,7 @@ static void command_input2(char* line) {
 }
 #endif
 
-INLINE void command_new() {
+S_INLINE void command_new() {
 	token_end();
 	IJB_ERR_CHK();
 	memclear4((uint8*)list, IJB_SIZEOF_LIST);
@@ -2181,7 +2210,7 @@ uint bk_max_list;
 int bk_min_list;
 #endif
 
-INLINE void command_list() {
+S_INLINE void command_list() {
 	#ifdef IJB_DONT_LOOP
 	continue_list = 0;
 	#endif
@@ -2192,7 +2221,7 @@ INLINE void command_list() {
 	if (token_getChar()) {
 		min = token_expression();
 		IJB_ERR_CHK();
-		switch (token_get().code) {
+		switch (token_getCode()) {
 			case TOKEN_COMMA:
 				max = token_expression();
 				IJB_ERR_CHK();  // ,の後省略でその後全部とか?、0の場合、その後全部 b20
@@ -2339,7 +2368,7 @@ int command_list_next() {
 
 
 //renum 番号置き換え対応版 500byte増える -> 勘違い、intを割り算してたからだった
-static inline int16 list_findIndex(int16 number) { // for command_renum
+S_INLINE int16 list_findIndex(int16 number) { // for command_renum
 	int index = 0;
 	int cnt = 0;
 	for (;;) {
@@ -2351,7 +2380,7 @@ static inline int16 list_findIndex(int16 number) { // for command_renum
 	}
 	return cnt;
 }
-static inline void command_renum2(int index, int n, int step) {
+S_INLINE void command_renum2(int index, int n, int step) {
 	char* bkpc = pc;
 
 	pc = (char*)(list + index + 3);
@@ -2363,7 +2392,7 @@ static inline void command_renum2(int index, int n, int step) {
 	uint len = strlen8(pc);
 //	int len = list_getLength(index); // alignなし版
 	for (;;) {
-		Token t = token_get();
+		Token t; Token_get(t);
 		if (t.code == TOKEN_NULL) {
 			if (*pc == '\0')
 				break;
@@ -2374,10 +2403,10 @@ static inline void command_renum2(int index, int n, int step) {
 			break;
 		} else if (t.code == TOKEN_GOTO || t.code == TOKEN_GOSUB_1 || t.code == TOKEN_GOSUB_2) {
 			char* tokenstart = lasttoken;
-			Token t = token_get();
+			Token t; Token_get(t);
 			if (t.code == TOKEN_NUMBER) {
 				int oldnum = t.value;
-				//a t = token_get();
+				//a Token_get(t);
 				//a if (t.code == TOKEN_NULL || t.code == TOKEN_ELSE) {
 					uint newnum = n + list_findIndex(oldnum) * step;
 					int ob = pc - lasttoken; //getBeam(oldnum);
@@ -2455,14 +2484,12 @@ void command_renum() {
 	}
 
 	int index = 0;
-	int n = start;
 	for (;;) {
 		int num = list_getNumber(index);
 		if (num == 0)
 			break;
 		// GOTO / GOSUB の行番号付け替え必要!! 0.9.5 式を使ったので、完全な付け替えは不可能
 		command_renum2(index, start, step);
-		n += step;
 		index += list_getLength(index) + 4;
 	}
 	index = 0;
@@ -2490,7 +2517,7 @@ void command_renum() {
 	*/
 }
 
-INLINE void command_run() {
+S_INLINE void command_run() {
 	//printf("%d %x\n", SIZE_RAM, SIZE_RAM);
 	token_end();
 
@@ -2508,14 +2535,14 @@ INLINE void command_run() {
 		pc = pcbreak = NULL;
 	}
 }
-INLINE void command_end() {
+S_INLINE void command_end() {
 	token_end();
 	pc = pcbreak = NULL;
 }
 void command_load(int command) {
 	int n = IJB_file();
 //	if (token_getChar()) {
-	int code = token_get().code; // ELSE対策 入らないので対策しない 1.2b61 -> 1.2b62 入った
+	int code = token_getCode(); // ELSE対策 入らないので対策しない 1.2b61 -> 1.2b62 入った
 	token_back();
 	if (code != TOKEN_NULL && code != TOKEN_ELSE) {
 		n = token_expression();
@@ -2524,7 +2551,7 @@ void command_load(int command) {
 	// LRUN n, m
 	int m = 0;
 	if (command == TOKEN_LRUN) {
-		code = token_get().code;
+		code = token_getCode();
 		if (code == TOKEN_COMMA) {
 			m = token_expression();
 			IJB_ERR_CHK();
@@ -2584,10 +2611,10 @@ void command_load(int command) {
 		command_error(ERR_FILE_ERROR);
 	}
 }
-INLINE void command_save() {
+S_INLINE void command_save() {
 	int16 n = IJB_file();
 //	if (token_getChar()) {
-	int code = token_get().code; // ELSE対策 1.2b61 +8byte
+	int code = token_getCode(); // ELSE対策 1.2b61
 	token_back();
 	if (code != TOKEN_NULL && code != TOKEN_ELSE) {
 		n = token_expression();
@@ -2632,7 +2659,7 @@ int16 bk_startn_files = 0;
 int16 bk_endn_files = 0;
 #endif
 
-INLINE void command_files() {
+S_INLINE void command_files() {
 	#ifdef IJB_DONT_LOOP
 	continue_files = 0;
 	#endif
@@ -2642,7 +2669,7 @@ INLINE void command_files() {
 	if (token_getChar()) {
 		endn = token_expression();
 		IJB_ERR_CHK();
-		Token t = token_get();
+		Token t; Token_get(t);
 		if (t.code != TOKEN_COMMA) {
 			token_back();
 			if (endn == 0) { // ver 1.2.4
@@ -2776,16 +2803,16 @@ int command_files_next() {
 #endif
 
 //
-INLINE void command_led() {
+S_INLINE void command_led() {
 	int16 n = token_expression();
 	IJB_ERR_CHK();
 	IJB_led(n);
 	token_end();
 }
-INLINE void command_out() {
+S_INLINE void command_out() {
 	int16 n = token_expression();
 	IJB_ERR_CHK();
-	int code = token_get().code;
+	int code = token_getCode();
 	if (code != TOKEN_COMMA) {
 		token_back();
 		IJB_out(0, n);
@@ -2796,10 +2823,10 @@ INLINE void command_out() {
 	}
 	token_end();
 }
-INLINE void command_pwm() {
+S_INLINE void command_pwm() {
 	int16 n = token_expression();
 	IJB_ERR_CHK();
-	int code = token_get().code;
+	int code = token_getCode();
 	if (code != TOKEN_COMMA) {
 		command_error(ERR_SYNTAX_ERROR);
 		return;
@@ -2808,17 +2835,17 @@ INLINE void command_pwm() {
 	int16 l = token_option1(0);
 	IJB_pwm(n, m, l);
 }
-INLINE void command_clo() {
+S_INLINE void command_clo() {
 	IJB_clo();
 	token_end();
 }
-INLINE void command_wait() {
+S_INLINE void command_wait() {
 	int16 n = token_expression();
 	int m = token_option1(1);
 	IJB_wait(n, m);
 }
 /*
-INLINE void command_lwait() {
+S_INLINE void command_lwait() {
 	int16 n = token_expression();
 	if (_g.err)
 		return;
@@ -2826,29 +2853,29 @@ INLINE void command_lwait() {
 	IJB_waitLittle(n);
 }
 */
-INLINE void command_cls() {
+S_INLINE void command_cls() {
 	token_end();
 	screen_clear();
 }
-INLINE void command_clt() {
+S_INLINE void command_clt() {
 	token_end();
 	video_waitSync(1);
 	video_clt();
 }
-INLINE void command_clv() {
+S_INLINE void command_clv() {
 	token_end();
 	basic_clearVars();
 }
-INLINE void command_locate() {
+S_INLINE void command_locate() {
 	int16 x = token_expression();
 	IJB_ERR_CHK();
-	int code = token_get().code;
+	int code = token_getCode();
 	int16 y;
 	if (code == TOKEN_COMMA) {
 		y = token_expression();
 
 		// cursor switch 1.3b4
-		code = token_get().code;
+		code = token_getCode();
 		if (code == TOKEN_COMMA) {
 			//_g.cursorflg = token_expression() != 0;
 			_g.cursorflg = token_expression();
@@ -2873,7 +2900,7 @@ void command_motor() {
 	int16 x = token_expression();
 	if (_g.err)
 		return;
-	Token t = token_get();
+	Token t; Token_get(t);
 	if (t.code != TOKEN_COMMA) {
 		command_error(ERR_SYNTAX_ERROR);
 		return;
@@ -2885,22 +2912,22 @@ void command_motor() {
 	token_end();
 }
 */
-INLINE void command_sleep() {
+S_INLINE void command_sleep() {
 	IJB_sleep();
 	token_end();
 }
-INLINE void command_reset() {
+S_INLINE void command_reset() {
 	IJB_reset();
 }
-INLINE void command_bps() {
+S_INLINE void command_bps() {
 	int n = token_expression();
 	// 1.2b56 I2C BPS
 	int m = token_option1(0);
 	IJB_bps(n, m);
 }
-INLINE void command_play() {
+S_INLINE void command_play() {
 	/*
-	Token t = token_get();
+	Token t; Token_get(t);
 	if (t.code != TOKEN_STRING) {
 		psg_playMML(NULL);
 		token_back();
@@ -2915,7 +2942,7 @@ INLINE void command_play() {
 	char* mml = NULL;
 
 //	if (token_getChar()) { // ELSE未対策
-	int code = token_get().code; // ELSE対策 1.2b61 +8byte
+	int code = token_getCode(); // ELSE対策 1.2b61
 	token_back();
 	if (code != TOKEN_NULL && code != TOKEN_ELSE) {
 		int16 n = token_expression();
@@ -2927,16 +2954,16 @@ INLINE void command_play() {
 	token_end();
 }
 
-INLINE void command_beep() {
+S_INLINE void command_beep() {
 	int16 len = 3;
 	int16 tone = 10;
 //	if (token_getChar()) {
-	int code = token_get().code; // ELSE対策 1.2b61 +8byte
+	int code = token_getCode(); // ELSE対策 1.2b61
 	token_back();
 	if (code != TOKEN_NULL && code != TOKEN_ELSE) {
 		tone = token_expression();
 		IJB_ERR_CHK();
-		code = token_get().code;
+		code = token_getCode();
 		if (code != TOKEN_COMMA) {
 			token_back();
 		} else {
@@ -2947,13 +2974,13 @@ INLINE void command_beep() {
 	token_end();
 	psg_beep(tone, len); // default, psg_beep(10, 3);
 }
-INLINE void command_tempo() {
+S_INLINE void command_tempo() {
 	int16 tempo = token_expression();
 	IJB_ERR_CHK();
 	token_end();
 	psg_tempo(tempo);
 }
-INLINE void command_video() {
+S_INLINE void command_video() {
 	int16 video = token_expression();
 	// 1.1b3
 	int clkdiv = token_option1(1);
@@ -2984,16 +3011,16 @@ INLINE void command_video() {
 		video_off(clkdiv);
 	}
 }
-INLINE void command_scroll() {
+S_INLINE void command_scroll() {
 	int16 dir = token_expression();
 	IJB_ERR_CHK();
 	token_end();
 	screen_scroll(dir);
 }
-INLINE void command_poke() {
+S_INLINE void command_poke() {
 	int16 n1 = token_expression();
 	IJB_ERR_CHK();
-	int code = token_get().code;
+	int code = token_getCode();
 	if (code != TOKEN_COMMA) {
 		command_error(ERR_SYNTAX_ERROR);
 		return; // IJB_ERR_RETURN();
@@ -3002,7 +3029,7 @@ INLINE void command_poke() {
 	IJB_ERR_CHK();
 	IJB_poke(n1, n2);
 	for (;;) {
-		code = token_get().code;
+		code = token_getCode();
 		if (code != TOKEN_COMMA) {
 			token_back();
 			token_end();
@@ -3015,11 +3042,11 @@ INLINE void command_poke() {
 	}
 }
 /*
-INLINE void command_pset() {
+S_INLINE void command_pset() {
 	int16 x = token_expression();
 	if (_g.err)
 		return;
-	Token t = token_get();
+	Token t; Token_get(t);
 	if (t.code != TOKEN_COMMA) {
 		command_error(ERR_SYNTAX_ERROR);
 		return;
@@ -3027,7 +3054,7 @@ INLINE void command_pset() {
 	int16 y = token_expression();
 	if (_g.err)
 		return;
-	t = token_get();
+	Token_get(t);
 	if (t.code != TOKEN_COMMA) {
 		command_error(ERR_SYNTAX_ERROR);
 		return;
@@ -3046,17 +3073,17 @@ INLINE void command_pset() {
 	token_end();
 }
 */
-INLINE void command_copy() {
+S_INLINE void command_copy() {
 	int16 dst = token_expression();
 	IJB_ERR_CHK();
-	int code = token_get().code;
+	int code = token_getCode();
 	if (code != TOKEN_COMMA) {
 		command_error(ERR_SYNTAX_ERROR);
 		return; // IJB_ERR_RETURN();
 	}
 	int16 src = token_expression();
 	IJB_ERR_CHK();
-	code = token_get().code;
+	code = token_getCode();
 	if (code != TOKEN_COMMA) {
 		command_error(ERR_SYNTAX_ERROR);
 		return; // IJB_ERR_RETURN();
@@ -3077,11 +3104,11 @@ INLINE void command_copy() {
 	}
 	token_end();
 }
-INLINE void command_clp() {
+S_INLINE void command_clp() {
 	screen_clp();
 	token_end();
 }
-INLINE void command_clk() {
+S_INLINE void command_clk() {
 	key_clearKey();
 	token_end();
 }
@@ -3095,7 +3122,7 @@ INLINE void command_clk() {
 #C00-#FFF	プログラム（行番号(2byte)、サイズ(1byte)、テキスト）
 #1000-		キーバッファ（・・・これとは限らないことにしよう、プログラム領域拡大予約のため） // b16
 */
-INLINE void command_help() {
+S_INLINE void command_help() {
 //	put_str("MEM MAP\n#000 CHAR\n#700 PCG\n#800 VAR\n#900 VRAM\n#C00 LIST\n"); // b14 一時的に削除 ver 1.1正式版
 	put_str("#000 CHAR\n#700 PCG\n#800 VAR\n#900 VRAM\n#C00 LIST\n"); // 1.2b58, 1.3b4
 //	put_str("MEM MAP\n#000 CHAR\n#700 PCG\n#800 VAR\n#900 VRAM\n#C00 LIST\n"); // 1.2b62
@@ -3108,19 +3135,19 @@ INLINE void command_help() {
 	token_end();
 }
 
-INLINE void command_srnd() {
+S_INLINE void command_srnd() {
 	int16 n = token_expression();
 	IJB_ERR_CHK();
 	token_end();
 	IJB_random_seed(n);
 }
 
-INLINE void command_uart() {
+S_INLINE void command_uart() {
 	int16 n = token_expression();
 	int16 m = token_option1(1);
 	IJB_uart(n, m);
 }
-INLINE void command_at() {
+S_INLINE void command_at() {
 //	while (*pc && *pc != ':' && *pc != '\'') {
 	while (*pc && *pc != ':') { // 1.2b40
 		pc++;
@@ -3128,15 +3155,15 @@ INLINE void command_at() {
 	token_end();
 }
 
-INLINE void command_lcd() { // 1.2b32, 1.3.2b12 contrast 292->248 +44byte
+S_INLINE void command_lcd() { // 1.2b32, 1.3.2b12 contrast 292->248 +44byte
 	uint n = !_g.display_mode;
-	int code = token_get().code; // ELSE対策 1.2b61 +8byte
+	int code = token_getCode(); // ELSE対策 1.2b61
 	token_back();
 	if (code != TOKEN_NULL && code != TOKEN_ELSE) {
 		n = token_expression();
 		IJB_ERR_CHK();
 
-		int code = token_get().code;
+		int code = token_getCode();
 		if (code != TOKEN_COMMA) {
 			token_back();
 		} else {
@@ -3148,7 +3175,7 @@ INLINE void command_lcd() { // 1.2b32, 1.3.2b12 contrast 292->248 +44byte
 	IJB_lcd(n);
 }
 
-INLINE void command_ok() { // 1.2b42 表示オフ追加、b53で OK0からOK2に変更
+S_INLINE void command_ok() { // 1.2b42 表示オフ追加、b53で OK0からOK2に変更
 	int n = 0;
 	if (token_getChar()) {
 //		n = !token_expression(); // 1.2b42 OK0で表示OFF
@@ -3220,7 +3247,7 @@ int sin(int deg) { // 680, 20byte多いけど、高速 (int16にすると12byte�
 */
 
 /*
-static inline int sin(int deg) { // 700
+S_INLINE int sin(int deg) { // 700
 	int x = 0;
 	int y = 0;
 	int v = 37000000;
@@ -3287,10 +3314,10 @@ int32 sin32(int32 s) {
 //	return (y / 2120080) * pm; // +-1,000
 }
 
-INLINE int32 cos32(int32 s) {
+S_INLINE int32 cos32(int32 s) {
 	return sin32(s + 90);
 }
-INLINE int32 tan32(int32 s) {
+S_INLINE int32 tan32(int32 s) {
 	int32 c = cos32(s);
 	return c == 0 ? INT32_MAX : sin32(s) * 10000 / c; // +-10,000
 //	return c == 0 ? INT32_MAX : sin32(s) * 1000 / c; // +-1,000
@@ -3332,13 +3359,13 @@ int atan2(int y, int x) {
 */
 
 // line
-INLINE void command_draw() { // +284byte
+S_INLINE void command_draw() { // +284byte
 	int pos[5];
 	int i;
 	for (i = 0; i < 5; i++) {
 		pos[i] = token_expression();
 		IJB_ERR_CHK();
-		int code = token_get().code;
+		int code = token_getCode();
 		if (code != TOKEN_COMMA) {
 			break;
 		}
@@ -3360,12 +3387,12 @@ INLINE void command_draw() { // +284byte
 }
 
 #ifdef EXT_SENSEHAT
-INLINE void command_sh_mlsp() {
+S_INLINE void command_sh_mlsp() {
 printf("mlsp\n");
 	int x = token_expression();
 	printf("%d\n", x);
 	IJB_ERR_CHK();
-	Token t = token_get();
+	Token t; Token_get(t);
 	if (t.code != TOKEN_COMMA) {
 		command_error(ERR_SYNTAX_ERROR);
 		return;
@@ -3373,7 +3400,7 @@ printf("mlsp\n");
 	int y = token_expression();
 	printf("%d\n", y);
 	IJB_ERR_CHK();
-	t = token_get();
+	Token_get(t);
 	if (t.code != TOKEN_COMMA) {
 		command_error(ERR_SYNTAX_ERROR);
 		return;
@@ -3388,11 +3415,11 @@ printf("mlsp %d,%d,%d\n", x, y, z);
 #endif
 
 #ifdef EXT_IOT
-INLINE void command_iot_out() {
+S_INLINE void command_iot_out() {
 	int n = token_expression();
 	IJB_ERR_CHK();
 
-	int code = token_get().code;
+	int code = token_getCode();
 	int m = -1;
 	if (code != TOKEN_COMMA) {
 		token_back();
@@ -3408,7 +3435,7 @@ INLINE void command_iot_out() {
 }
 #endif
 
-INLINE void command_ws_out(int port) {
+S_INLINE void command_ws_out(int port) {
 	//int p = token_expression();
 	int n = token_expression();
 	int m = token_option1(1);
@@ -3417,14 +3444,14 @@ INLINE void command_ws_out(int port) {
 
 #ifndef NO_KBD_COMMAND
 #ifdef VERSION15
-INLINE void command_kbd() {
+S_INLINE void command_kbd() {
 	int n = token_expression();
 	IJB_kbd(n);
 }
-INLINE void command_dac() {
+S_INLINE void command_dac() {
 	int16 n1 = token_expression();
 	IJB_ERR_CHK();
-	int code = token_get().code;
+	int code = token_getCode();
 	if (code != TOKEN_COMMA) {
 		command_error(ERR_SYNTAX_ERROR);
 		return;
