@@ -24,6 +24,18 @@
 SDClass theSD;
 AudioClass* theAudio = NULL;
 
+static char fname[32]="\0";
+
+enum PlayerState {
+  PlayerReady,
+  PlayerStart,
+  PlayerRun,
+  PlayerStop
+};
+
+PlayerState player0_state = PlayerReady;
+
+
 
 bool ErrEnd = false;
 
@@ -39,6 +51,93 @@ static void audio_attention_cb(const ErrorAttentionParam *atprm) {
   if (atprm->error_code >= AS_ATTENTION_CODE_WARNING) {
     ErrEnd = true;
   }
+}
+
+
+
+bool player_start(File& myFile) {
+
+  /* Verify file open */
+  if (!myFile.available()) {
+    printf("Invalid File.\n");
+    return false;
+  }
+
+  /* Send first frames to be decoded */
+  int err = theAudio->writeFrames(AudioClass::Player0, myFile);
+
+  if ((err != AUDIOLIB_ECODE_OK) && (err != AUDIOLIB_ECODE_FILEEND)) {
+    printf("File Read Error! =%d\n",err);
+    myFile.close();
+    myFile = NULL;
+    return false;
+  }
+
+  theAudio->setVolume(-40,-180,-80);
+  theAudio->startPlayer(AudioClass::Player0);
+
+  if (err == AUDIOLIB_ECODE_FILEEND) {
+    usleep(10*1000);
+    theAudio->stopPlayer(AudioClass::Player0, AS_STOPPLAYER_ESEND);
+    myFile.close();
+    myFile = NULL;
+  }
+
+  return true;
+
+}
+
+void play_process(int argc, FAR char *argv[])
+{
+  File myFile = NULL;
+
+  while (1) {
+
+    switch (player0_state) {
+
+    case PlayerStart:
+      myFile = theSD.open(fname);
+      if(player_start(myFile)) {
+        player0_state = PlayerRun;
+      }else{
+        player0_state = PlayerReady;
+      }
+      break;
+
+    case PlayerRun:
+      {
+      err_t err = theAudio->writeFrames(AudioClass::Player0, myFile);
+
+      if (err == AUDIOLIB_ECODE_FILEEND) {
+        printf("Player%d File End!\n", AudioClass::Player0);
+        theAudio->stopPlayer(AudioClass::Player0, AS_STOPPLAYER_ESEND);
+        myFile.close();
+        myFile = NULL;
+        player0_state = PlayerReady;
+      } else if (err != AUDIOLIB_ECODE_OK) {
+        printf("Player%d error code: %d\n", AudioClass::Player0, err);
+        theAudio->stopPlayer(AudioClass::Player0, AS_STOPPLAYER_NORMAL);
+        myFile.close();
+        myFile = NULL;
+        player0_state = PlayerReady;
+      }
+      }
+      break;
+
+    case PlayerStop:
+      theAudio->stopPlayer(AudioClass::Player0, AS_STOPPLAYER_NORMAL);
+      usleep(20*1000);
+      myFile.close();
+      myFile = NULL;
+      player0_state = PlayerReady;
+      break;
+
+    }
+
+    usleep(10000);
+
+  }
+
 }
 
 void audioplayer_init2() {
@@ -73,15 +172,25 @@ void audioplayer_init2() {
       printf("Player0 initialize error\n");
       //exit(1);
   }
+
+  err = theAudio->initPlayer(AudioClass::Player1, AS_CODECTYPE_MP3, "/mnt/sd0/BIN", AS_SAMPLINGRATE_AUTO, AS_CHANNEL_STEREO);
+
+  /* Verify player initialize */
+  if (err != AUDIOLIB_ECODE_OK) {
+      printf("Player1 initialize error\n");
+      //exit(1);
+  }
+
+ /* Initialize task parameter. */
+
+  /* Start task */
+  const char *argv[3] = {0};
+
+  task_create("player_thread0", 155, 2048, play_process, (char* const*)argv);
 }
 
 void audioplayer_init() {
   /* Initialize SD */
-  /*
-  while (!theSD.begin()) {
-    Serial.println("Insert SD card.");
-  }
-  */
   while (!theSD.begin()) {
     Serial.println("Insert SD card.");
   }
@@ -89,7 +198,6 @@ void audioplayer_init() {
   audioplayer_init2();
 }
 
-File myFile = NULL;
 
 /**
  * @brief Setup audio player to play mp3 file
@@ -102,6 +210,40 @@ File myFile = NULL;
  * Set master volume to -16.0 dB
  */
 void audioplayer_play(const char* mp3fn) {
+
+  puts("Play!");
+
+  /* Open file placed on SD card */
+  strcpy(fname,"sound0/");
+  strcat(fname,mp3fn);
+
+  player0_state = PlayerStart;
+
+}
+
+void audioplayer_stop() {
+
+  puts("Stop!");
+
+  player0_state = PlayerStop;
+
+}
+
+/**
+ * @brief Setup audio player to play mp3 file
+ *
+ * Set clock mode to normal <br>
+ * Set output device to speaker <br>
+ * Set main player to decode stereo mp3. Stream sample rate is set to "auto detect" <br>
+ * System directory "/mnt/sd0/BIN" will be searched for MP3 decoder (MP3DEC file)
+ * Open "Sound.mp3" file <br>
+ * Set master volume to -16.0 dB
+ */
+void audioplayer_sound(const char* mp3fn) {
+
+  static  char fname[32]="\0";
+  File myFile = NULL;
+
   int flg = myFile != NULL;
   if (myFile) {
     myFile.close();
@@ -110,98 +252,41 @@ void audioplayer_play(const char* mp3fn) {
   if (ErrEnd) {
     ErrEnd = false;
     flg = 0;
-    // reset
-    theAudio->stopPlayer(AudioClass::Player0);
-    theAudio->setReadyMode();
-    theAudio->end();
-    //theAudio = NULL;
-    audioplayer_init2();
+    return;
   }
 
   /* Open file placed on SD card */
-  //myFile = theSD.open("kimigayo.mp3");
-  //myFile = theSD.open("45seconds.mp3");
-  myFile = theSD.open(mp3fn);
-  
+  strcpy(fname,"sound1/");
+  strcat(fname,mp3fn);
+  myFile = theSD.open(fname);
+
   /* Verify file open */
   if (!myFile) {
-      printf("File open error\n");
-      //exit(1);
+    printf("File open error\n");
+    return;
   }
   printf("Open! 0x%08lx\n", (uint32_t)myFile);
 
   /* Send first frames to be decoded */
-  int err = theAudio->writeFrames(AudioClass::Player0, myFile);
+  int err = theAudio->writeFrames(AudioClass::Player1, myFile);
 
   if ((err != AUDIOLIB_ECODE_OK) && (err != AUDIOLIB_ECODE_FILEEND)) {
     printf("File Read Error! =%d\n",err);
     myFile.close();
     myFile = NULL;
     return;
-    //exit(1);
   }
 
   if (flg) {
     return;
   }
   /* Main volume set to -16.0 dB */
-  puts("Play!");
-  theAudio->setVolume(-160);
-  theAudio->startPlayer(AudioClass::Player0);
-}
-
-/**
- * @brief Play stream
- *
- * Send new frames to decode in a loop until file ends
- */
-void audio_loop()
-{
-  puts("loop!!");
-
-  /* Send new frames to decode in a loop until file ends */
-  int err = theAudio->writeFrames(AudioClass::Player0, myFile);
-
-  /*  Tell when player file ends */
-  if (err == AUDIOLIB_ECODE_FILEEND)
-    {
-      printf("Main player File End!\n");
-    }
-
-  /* Show error code from player and stop */
-  if (err)
-    {
-      printf("Main player error code: %d\n", err);
-      goto stop_player;
-    }
-
-  if (ErrEnd)
-    {
-      printf("Error End\n");
-      goto stop_player;
-    }
-
-  /* This sleep is adjusted by the time to read the audio stream file.
-   * Please adjust in according with the processing contents
-   * being processed at the same time by Application.
-   *
-   * The usleep() function suspends execution of the calling thread for usec
-   * microseconds. But the timer resolution depends on the OS system tick time
-   * which is 10 milliseconds (10,000 microseconds) by default. Therefore,
-   * it will sleep for a longer time than the time requested here.
-   */
-
-  //usleep(40000);
-
-
-  /* Don't go further and continue play */
-  return;
-
-stop_player:
-  theAudio->stopPlayer(AudioClass::Player0);
+  puts("Sound!");
+  theAudio->setVolume(-40,-180,-80);
+  theAudio->startPlayer(AudioClass::Player1);
+  usleep(10*1000);
+  theAudio->stopPlayer(AudioClass::Player1, AS_STOPPLAYER_ESEND);
   myFile.close();
-  theAudio->setReadyMode();
-  theAudio->end();
-  theAudio = NULL;
-  //exit(1);
+  myFile = NULL;
 }
+

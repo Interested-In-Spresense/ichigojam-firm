@@ -43,6 +43,8 @@ $BASE_PATH/Library/Arduino15/packages/SPRESENSE/tools/gcc-arm-none-eabi/9.2.1/$B
 -I$BASE_PATH/Library/Arduino15/packages/SPRESENSE/hardware/spresense/$SDK_VERSION/libraries/SPI \
 -I$BASE_PATH/Documents/Arduino/libraries/Adafruit-GFX-Library \
 -I$BASE_PATH/Documents/Arduino/libraries/Adafruit_ILI9341 \
+-I$BASE_PATH/Documents/Arduino/libraries/ILI9488 \
+-I$BASE_PATH/Documents/Arduino/libraries/PS2Keyboard \
 -I../IchigoJam_BASIC/ -I./src/ ../IchigoJam_BASIC/main.c -o main.o
 
 # $BASE_PATH/Library/Arduino15/packages/SPRESENSE/tools/spresense-tools/$SDK_VERSION/getspkinfo/$BUILD_OS/getspkinfo ichigojam-spr.spk
@@ -56,11 +58,13 @@ $BASE_PATH/Library/Arduino15/packages/SPRESENSE/tools/gcc-arm-none-eabi/9.2.1/$B
 $DEBUG -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Xlinker --entry=__start -nodefaultlibs -nostartfiles -Wl,--defsym,__reserved_ramsize=1572864-786432 \
 -T$BASE_PATH/Library/Arduino15/packages/SPRESENSE/hardware/spresense/$SDK_VERSION/variants/spresense/ramconfig.ld -Wl,--gc-sections -Xlinker \
 -Map=$OBJ/output.map -o main.elf -Wl,--start-group main.o \
+$OBJ/PS2Keyboard.cpp.o \
 $OBJ/SPI.cpp.o \
 $OBJ/glcdfont.c.o \
 $OBJ/Adafruit_GFX.cpp.o \
 $OBJ/Adafruit_SPITFT.cpp.o \
 $OBJ/Adafruit_ILI9341.cpp.o \
+$OBJ/ILI9488.cpp.o \
 $OBJ/SDHCI.cpp.o \
 $OBJ/Storage.cpp.o \
 $OBJ/File.cpp.o \

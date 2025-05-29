@@ -54,7 +54,7 @@ void io_init() {
 	pinMode(LED2, OUTPUT);
 	pinMode(LED3, OUTPUT);
 	
-	pinMode(PIN_D07, INPUT); // for BTN
+	pinMode(PIN_D02, INPUT); // for BTN
 	//digitalWrite(PIN_D07, 0); // for LEDは出力不足で失敗（トランジスタ必要？）
 }
 // ADC
@@ -96,6 +96,7 @@ S_INLINE void IJB_out(int port, int st) {
 		digitalWrite(p, st != 0);
 	}
 }
+
 S_INLINE int IJB_btn(int n) {
 	return !digitalRead(PIN_D07);
 }
